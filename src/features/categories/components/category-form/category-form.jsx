@@ -51,7 +51,7 @@ function CategoryForm({ title, submitText, categoryId = null }) {
       addCategory.mutate(formattedCategory, {
         onSuccess: (data) => {
           alert("تمت إضافة الفئة بنجاح!");
-          console.log("Category added successfully:", data);
+          console.log("Category added successfully: ", data);
           navigate("/categories", { replace: true });
         },
         onError: (error) => {
