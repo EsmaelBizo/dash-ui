@@ -24,8 +24,8 @@ export const deleteCategory = async (categoryId) => {
   return response;
 };
 
-export const updateCategory = async (categoryData) => {
-  const response = await apiClient.patch(`/categories`, categoryData);
+export const updateCategory = async (categoryId, categoryData) => {
+  const response = await apiClient.patch(`/categories/${categoryId}`, categoryData);
 
   return response;
 };

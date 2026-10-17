@@ -1,9 +1,21 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, replace, useNavigate } from "react-router-dom";
 
 import Sidebar from "../components/sidebar/sidebar";
 import Topbar from "../components/topbar/topbar";
+import { getToken } from "../utils/token-storage";
+import { useEffect } from "react";
 
 function DashboardLayout() {
+  const token = getToken();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, [token]);
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-page">
       <Sidebar />

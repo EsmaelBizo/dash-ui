@@ -7,6 +7,7 @@ import {
   useUpdateCategory,
   useGetCategory,
 } from "../../hooks/categories.hooks";
+import { replace, useNavigate } from "react-router-dom";
 
 function CategoryForm({ title, submitText, categoryId = null }) {
   const [category, setCategory] = useState({
@@ -27,6 +28,8 @@ function CategoryForm({ title, submitText, categoryId = null }) {
   const addCategory = useAddCategory();
   const editCategory = useUpdateCategory(categoryId);
 
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const formattedCategory = {
@@ -36,19 +39,23 @@ function CategoryForm({ title, submitText, categoryId = null }) {
     if (categoryId) {
       editCategory.mutate(formattedCategory, {
         onSuccess: (data) => {
-          console.log("Category updated successfully:", data);
+          alert("تم تحديث الفئة بنجاح!");
+          navigate("/categories", { replace: true });
         },
         onError: (error) => {
+          alert("حدث خطأ أثناء تحديث الفئة. يرجى المحاولة مرة أخرى.");
           console.error("Error updating category:", error);
         },
       });
     } else {
       addCategory.mutate(formattedCategory, {
         onSuccess: (data) => {
+          alert("تمت إضافة الفئة بنجاح!");
           console.log("Category added successfully:", data);
+          navigate("/categories", { replace: true });
         },
         onError: (error) => {
-          console.error("Error adding category:", error);
+          alert("حدث خطأ أثناء إضافة الفئة. يرجى المحاولة مرة أخرى.");
         },
       });
     }

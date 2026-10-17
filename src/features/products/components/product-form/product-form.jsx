@@ -4,8 +4,12 @@ import Input from "../../../../components/ui/input";
 import Select from "../../../../components/ui/select";
 import Textarea from "../../../../components/ui/textarea";
 import { useGetCategories } from "../../../categories/hooks/categories.hooks";
-import { useGetProduct, useAddProduct, useUpdateProduct } 
-from "../../hooks/products.hooks";
+import {
+  useGetProduct,
+  useAddProduct,
+  useUpdateProduct,
+} from "../../hooks/products.hooks";
+import { replace, useNavigate } from "react-router-dom";
 
 const initialProductState = {
   name: "",
@@ -20,7 +24,8 @@ function ProductForm({ title, submitText, productId = null }) {
 
   const categories = useGetCategories().data?.data || [];
 
-  const hasRealProductId = productId !== null && productId !== undefined && productId !== "";
+  const hasRealProductId =
+    productId !== null && productId !== undefined && productId !== "";
 
   const { data: productData } = useGetProduct(productId, {
     enabled: hasRealProductId,
@@ -43,9 +48,11 @@ function ProductForm({ title, submitText, productId = null }) {
 
   const isPending = addProduct.isPending || editProduct.isPending;
 
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     const formattedProduct = {
       name: product.name,
       price: Number(product.price),
@@ -59,10 +66,13 @@ function ProductForm({ title, submitText, productId = null }) {
         onSuccess: (data) => {
           console.log("Product updated successfully:", data);
           alert("تم تحديث المنتج بنجاح!");
+          navigate("/products", { replace: true });
         },
         onError: (error) => {
           console.error("Error updating product:", error);
-          alert(`فشل التعديل: ${error.response?.data?.message || "يرجى مراجعة الحقول"}`);
+          alert(
+            `فشل التعديل: ${error.response?.data?.message || "يرجى مراجعة الحقول"}`,
+          );
         },
       });
     } else {
@@ -71,10 +81,13 @@ function ProductForm({ title, submitText, productId = null }) {
           console.log("Product added successfully:", data);
           alert("تم إضافة المنتج بنجاح!");
           setProduct(initialProductState);
+          navigate("/products", { replace: true });
         },
         onError: (error) => {
           console.error("Error adding product:", error);
-          alert(`فشلت الإضافة: ${error.response?.data?.message || "يرجى مراجعة الحقول"}`);
+          alert(
+            `فشلت الإضافة: ${error.response?.data?.message || "يرجى مراجعة الحقول"}`,
+          );
         },
       });
     }
@@ -122,10 +135,14 @@ function ProductForm({ title, submitText, productId = null }) {
           <Select
             name="categoryId"
             value={product?.categoryId || ""}
-            onChange={(e) => setProduct({ ...product, categoryId: e.target.value })}
+            onChange={(e) =>
+              setProduct({ ...product, categoryId: e.target.value })
+            }
             required
           >
-            {categories.length === 0 && <option value="">Loading categories...</option>}
+            {categories.length === 0 && (
+              <option value="">Loading categories...</option>
+            )}
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -140,7 +157,9 @@ function ProductForm({ title, submitText, productId = null }) {
             name="imageUrl"
             placeholder="https://..."
             value={product?.imageUrl || ""}
-            onChange={(e) => setProduct({ ...product, imageUrl: e.target.value })}
+            onChange={(e) =>
+              setProduct({ ...product, imageUrl: e.target.value })
+            }
             required
           />
         </label>
@@ -152,7 +171,9 @@ function ProductForm({ title, submitText, productId = null }) {
             rows="5"
             placeholder="Product description..."
             value={product?.description || ""}
-            onChange={(e) => setProduct({ ...product, description: e.target.value })}
+            onChange={(e) =>
+              setProduct({ ...product, description: e.target.value })
+            }
             required
           />
         </label>
