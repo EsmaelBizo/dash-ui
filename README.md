@@ -135,4 +135,3 @@ export default defineConfig({
 npm install
 npm run dev
 ```
-Hello "Nour"
